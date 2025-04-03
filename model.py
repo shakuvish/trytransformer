@@ -139,3 +139,10 @@ class Encoder(nn.Module):
             x= layer(x, mask)
 
         return self.norm(x)
+    
+
+class DecoderBlock(nn.Module):
+    def __init__(self, self_attention_block)
+
+
+    
