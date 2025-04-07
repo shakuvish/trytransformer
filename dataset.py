@@ -2,6 +2,8 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset
 
+from dataset import BilingualDataset, casual_mask
+
 class BilingualDataset(Dataset):
 
     def __init__(self,ds,tokenizer_src,tokenizer_tgt,src_lang,tgt_lang,seq_len) -> None:
@@ -76,8 +78,12 @@ class BilingualDataset(Dataset):
             "encoder_input":encoder_input,
             "decoder_input":decoder_input,
             "encoder_mask":(encoder_input !=self.pad_token).unsqueeze(0).unsqueeze(0).int(),
-            "decoder_mask": (decoder_input !=self.pad_token).int() & casual_mask(decoder_input.size(0))
+            "decoder_mask": (decoder_input !=self.pad_token).int() & casual_mask(decoder_input.size(0)),
+            "label": label,
+            "src_text":src_text,
+            "tgt_text":tgt_text
         }
 
 def casual_mask(size):
-    mask=torch.
+    mask=torch.triu(torch.ones(1,size,size),diagnoal=1).type(torch,int)
+    return mask ==0
