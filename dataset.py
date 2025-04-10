@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset
 
-from mydataset import BilingualDataset, casual_mask
+#from dataset import BilingualDataset, casual_mask
 
 class BilingualDataset(Dataset):
 

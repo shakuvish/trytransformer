@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset,DataLoader,random_split
 
-from mydataset import BilingualDataset,casual_mask
+from dataset import BilingualDataset,casual_mask
 from model import build_transformer
 
 from datasets import load_dataset
