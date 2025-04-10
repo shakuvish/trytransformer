@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset
 
-from dataset import BilingualDataset, casual_mask
+from mydataset import BilingualDataset, casual_mask
 
 class BilingualDataset(Dataset):
 
@@ -17,7 +17,7 @@ class BilingualDataset(Dataset):
 
         self.sos_token=torch.Tensor(tokenizer_src.token_to_id(['[SOS]']),dtype=torch.int64)
         self.eos_token=torch.Tensor(tokenizer_src.token_to_id(['[EOS]']),dtype=torch.int64)
-        self.pad_token=torch.Tesnor(tokenizer_src.token_to_id(['[PAD]']),dtype=torch.int64)
+        self.pad_token=torch.Tensor(tokenizer_src.token_to_id(['[PAD]']),dtype=torch.int64)
 
     
     def __len__(self):
@@ -51,7 +51,7 @@ class BilingualDataset(Dataset):
         decoder_input=torch.cat(
             [
                 self.sos_token,
-                torch.tensor([self.pad_token]*dec_num_padding_tokens,dtypr=torch.int64)
+                torch.tensor([self.pad_token]*dec_num_padding_tokens,dtype=torch.int64)
 
 
                 
@@ -85,5 +85,5 @@ class BilingualDataset(Dataset):
         }
 
 def casual_mask(size):
-    mask=torch.triu(torch.ones(1,size,size),diagnoal=1).type(torch,int)
+    mask=torch.triu(torch.ones(1,size,size),diagonal=1).type(torch.int)
     return mask ==0
