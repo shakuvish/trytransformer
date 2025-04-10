@@ -1,4 +1,5 @@
 from pathlib import Path
+
 def get_config():
     return{
         "batch_size" :8,
@@ -16,11 +17,10 @@ def get_config():
         "datasource": "opus_books"
     }
 
-def get_weights_file_path(config,epoch:str):
-    model_folder=config['model_folder']
-    model_basename=config['model_basename']
-    model_filename=f"{model_basename}{epoch}.pt"
-    return str(Path('.')/model_folder/model_filename)
+def get_weights_file_path(config, epoch: str):
+    model_folder = f"{config['datasource']}_{config['model_folder']}"
+    model_filename = f"{config['model_filename']}{epoch}.pt"
+    return str(Path('.') / model_folder / model_filename)
 
 
 
