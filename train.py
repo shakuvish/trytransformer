@@ -38,8 +38,8 @@ def get_or_build_tokenizer(config,ds,lang):
 
 def get_ds(config):
     ds_raw=load_dataset('opus_books', f'{config["lang_src"]}-{config["lang_tgt"]}',split='train')
-    tokenizer_src=get_or_build_tokenizer(config,ds_raw,config=['lang_src'])
-    tokenizer_tgt=get_or_build_tokenizer(config,ds_raw,config['lang_tgt'])
+    tokenizer_src=get_or_build_tokenizer(config, ds_raw, config['lang_src'])
+    tokenizer_tgt=get_or_build_tokenizer(config, ds_raw, config['lang_tgt'])
 
     train_ds_size=int(0.9*len(ds_raw))
     val_ds_size=len(ds_raw)-train_ds_size
@@ -106,7 +106,7 @@ def train_model(config):
         model_filename=get_weights_file_path(config,config['preload'])
         print(f'Preloading model{model_filename}')
         state=torch.load(model_filename)
-        intial_epoch=state['epoch']+1
+        initial_epoch=state['epoch']+1
         optimizer.load_state_dict(state['optimizer_state_dict'])
         global_step=state['global_step']
 
@@ -131,7 +131,7 @@ def train_model(config):
             loss = loss_fn(proj_output.view(-1,tokenizer_tgt.get_vocab_size()),label.view(-1))
 
             batch_iterator.set_postfix({f"loss":f"{loss.item():6.3f}"})
-            writer.add_scaler('train loss', loss.item(),global_step)
+            writer.add_scalar('train loss', loss.item(),global_step)
             writer.flush()
 
             loss.backward()
@@ -139,12 +139,12 @@ def train_model(config):
             optimizer.step()
             optimizer.zero_grad()
 
-            global_step=+1
+            global_step += 1
 
         model_filename= get_weights_file_path(config, f'{epoch:02d}')
         torch.save({
             'epoch':epoch,
-            'model_state_dict': model.state.dict(),
+            'model_state_dict': model.state_dict(),
             'optimizer_state_dict': optimizer.state_dict(),
             'global_step': global_step
 

@@ -21,7 +21,7 @@ class PositionalEncoding(nn.Module):
         self.seq_len = seq_len
         self.dropout = nn.Dropout(dropout)
 
-        pe = torch.zeroes(seq_len, d_model)
+        pe = torch.zeros(seq_len, d_model)
         position = torch.arange(0, seq_len, dtype=torch.float).unsqueeze(1)
         div_term = torch.exp(torch.arange(0, d_model,2).float()*(-math.log(10000.0)/d_model))
 
@@ -44,10 +44,10 @@ class LayerNormalization(nn.Module):
         self.alpha = nn.Parameter(torch.ones(1))
         self.bias = nn.Parameter(torch.zeros(1))
 
-        def forward(self,x):
-            mean = x.mean(dim = -1, keepdim=True)
-            std = x.std(dim = -1, keepdim=True)
-            return self.alpha *(x - mean) / (std + self.eps) + self.bias
+    def forward(self,x):
+        mean = x.mean(dim = -1, keepdim=True)
+        std = x.std(dim = -1, keepdim=True)
+        return self.alpha *(x - mean) / (std + self.eps) + self.bias
         
 class FeedForwardBlock(nn.Module):
 
@@ -55,7 +55,7 @@ class FeedForwardBlock(nn.Module):
         super().__init__()
         self.linear_1 = nn.Linear(d_model, d_ff)
         self.dropout = nn.Dropout(dropout)
-        self.linear_2inear_2 = nn.Linear(d_ff, d_model)
+        self.linear_2 = nn.Linear(d_ff, d_model)
 
     def forward(self, x):
         return self.linear_2(self.dropout(torch.relu(self.linear_1(x))))
@@ -226,14 +226,14 @@ def build_transformer(src_vocab_size:int,tgt_vocab_size:int, srs_seq_len:int,tgt
         decoder_blocks.append(decoder_block)
 
 
-    encoder=Encoder(nn.ModuleList(encoder_block))
-    decoder=Decoder(nn.ModuleList(decoder_block))
+    encoder=Encoder(nn.ModuleList(encoder_blocks))
+    decoder=Decoder(nn.ModuleList(decoder_blocks))
 
     projection_layer=ProjectionLayer(d_model,tgt_vocab_size)
 
     transformer= Transformer(encoder,decoder,src_embed,tgt_embed,src_pos,tgt_pos,projection_layer)
 
-    for p in transformer.parameter():
+    for p in transformer.parameters():
         if p.dim() >1:
             nn.init.xavier_uniform(p)
 
