@@ -17,8 +17,30 @@ from config import get_weights_file_path,get_config
 
 from pathlib import Path
 
+
 from tqdm import tqdm
 
+def greddy_decode(model,source,source_mask,tokenizer_src,tokenizer_tgt,max_len,device):
+    sos_idx=tokenizer_tgt.token_to_id()
+
+
+def run_validation(model,validation_ds,tokenizer_src,tokenizer_tgt,max_len,device,print_msg,global_state,writer,num_examples=2):
+    model.eval()
+    count=0
+
+    source_text=[]
+    expected=[]
+    predicted=[]
+
+    console_width=80
+
+    with torch.no_grad():
+        for batch in validation_ds:
+            count +=1
+            encoder_input=batch['encoder_input'].to(device)
+            encoder_mask=batch['encoder_mask'].to(device)
+
+            assert encoder_imput.size(0)==1,"Batch size must be 1 for validation"
 
 def get_all_sentences(ds,lang):
     for item in ds:
